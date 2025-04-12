@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+html,
+body {
+  font-family: Helvetica, Arial;
+  background-color: white;
+  background-image: radial-gradient(
+    circle,
+    rgba(209, 209, 209, 0.5) 10%,
+    transparent 0%
+  );
+  background-size: 20px 20px;
+}
