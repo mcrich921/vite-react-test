@@ -15,6 +15,7 @@ interface Project {
   director?: string;
   year: string;
   role: string;
+  skills?: string[];
 }
 
 interface LightboxProps {
@@ -36,16 +37,27 @@ const Lightbox: React.FC<LightboxProps> = ({ project, onClose }) => {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 20, opacity: 0 }}
-        className="bg-white w-full max-w-6xl max-h-[90vh] overflow-y-auto rounded-sm relative"
+        className="bg-white w-full max-w-6xl max-h-[90vh] overflow-y-auto relative"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute top-8 right-8 text-black text-sm font-light hover:opacity-70 transition-opacity"
-        >
-          esc
-        </button>
+        {/* Navigation header */}
+        <div className="bg-black text-white flex items-center justify-between px-8 py-4">
+          <div className="flex items-center">
+            <button className="flex items-center text-white hover:opacity-70 transition-opacity">
+              <span className="mr-2">←</span>
+              <span className="text-lg font-light">
+                {project.title.toLowerCase()}
+              </span>
+            </button>
+            <span className="mx-3">→</span>
+          </div>
+          <button
+            onClick={onClose}
+            className="text-white text-lg font-light hover:opacity-70 transition-opacity"
+          >
+            esc
+          </button>
+        </div>
 
         <div className="p-8 md:p-12">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -69,7 +81,9 @@ const Lightbox: React.FC<LightboxProps> = ({ project, onClose }) => {
                   />
                 )}
               </div>
-              <div className="grid grid-cols-2 gap-4">
+
+              {/* Additional grid of images (shown below main image) */}
+              <div className="grid grid-cols-1 gap-4">
                 {project.media.slice(1).map((media, index) => (
                   <div key={index} className="aspect-video">
                     {media.type === "video" ? (
@@ -91,33 +105,45 @@ const Lightbox: React.FC<LightboxProps> = ({ project, onClose }) => {
 
             {/* Right Column - Info */}
             <div>
-              <h2 className="text-5xl font-normal mb-4">{project.title}</h2>
-              <p className="text-xl mb-8">{project.year}</p>
+              <h2 className="text-6xl font-normal mb-2">{project.title}</h2>
+              <p className="text-2xl mb-10">{project.year}</p>
 
-              <div className="grid grid-cols-2 gap-x-8 gap-y-4 mb-12 text-lg">
-                {project.client && (
-                  <>
-                    <div className="font-light">Client</div>
-                    <div>{project.client}</div>
-                  </>
-                )}
-                {project.studio && (
-                  <>
-                    <div className="font-light">Studio</div>
-                    <div>{project.studio}</div>
-                  </>
-                )}
-                {project.director && (
-                  <>
-                    <div className="font-light">Director</div>
-                    <div>{project.director}</div>
-                  </>
-                )}
-                <div className="font-light">Role</div>
-                <div>{project.role}</div>
+              {/* Project metadata in a bracket-like design */}
+              <div className="border-l-2 border-black pl-5 mb-10 relative">
+                <div className="absolute left-0 top-0 h-5 w-5 border-l-2 border-t-2 border-black -ml-2 -mt-1"></div>
+                <div className="absolute left-0 bottom-0 h-5 w-5 border-l-2 border-b-2 border-black -ml-2 -mb-1"></div>
+
+                <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-4 text-lg">
+                  <div className="font-light">Client</div>
+                  <div>{project.client || "—"}</div>
+
+                  <div className="font-light">Studio</div>
+                  <div>{project.studio || "—"}</div>
+
+                  <div className="font-light">Director</div>
+                  <div>{project.director || "—"}</div>
+                </div>
               </div>
 
-              <p className="text-lg leading-relaxed">{project.description}</p>
+              {/* Skills/tags */}
+              <div className="flex flex-wrap gap-2 mb-8">
+                {project.skills ? (
+                  project.skills.map((skill, index) => (
+                    <div key={index} className="border border-black px-4 py-1">
+                      {skill}
+                    </div>
+                  ))
+                ) : (
+                  <div className="border border-black px-4 py-1">
+                    {project.role}
+                  </div>
+                )}
+              </div>
+
+              {/* Description */}
+              <p className="text-lg leading-relaxed mb-6">
+                {project.description}
+              </p>
             </div>
           </div>
         </div>

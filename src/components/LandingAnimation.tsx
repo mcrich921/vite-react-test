@@ -66,11 +66,10 @@ const LandingAnimation: React.FC<LandingAnimationProps> = ({
         ) : (
           <motion.div
             key="header-name"
-            className="w-full"
+            className="w-full text-center mt-10"
             initial={{ y: "50vh", fontSize: "8rem" }}
             animate={{
               y: 0,
-              fontSize: "2rem",
               transition: {
                 duration: 1.2,
                 ease: [0.19, 1, 0.22, 1], // Custom easing for smooth animation
@@ -78,7 +77,60 @@ const LandingAnimation: React.FC<LandingAnimationProps> = ({
             }}
             onAnimationComplete={() => setIsTransitionComplete(true)}
           >
-            <h1 className="text-7xl px-8 py-6">{name}</h1>
+            <h1 className="text-6xl sm:text-7xl md:text-8xl font-normal tracking-tighter">
+              {name}
+            </h1>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: 1,
+                transition: { delay: 0.3, duration: 0.5 },
+              }}
+              className="text-xl font-bold"
+            >
+              vfx/graphics
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{
+                opacity: 1,
+                transition: { delay: 0.5, duration: 0.5 },
+              }}
+              className="flex justify-center space-x-6 mt-6"
+            >
+              <a
+                href="mailto:contact@example.com"
+                className="hover:opacity-70 transition-opacity text-sm"
+              >
+                email
+              </a>
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:opacity-70 transition-opacity text-sm"
+              >
+                linkedin
+              </a>
+              <a
+                href="https://imdb.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:opacity-70 transition-opacity text-sm"
+              >
+                imdb
+              </a>
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:opacity-70 transition-opacity text-sm"
+              >
+                ig
+              </a>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
