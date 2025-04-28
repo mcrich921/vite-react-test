@@ -31,6 +31,7 @@ const projectsData = [
     category: "VFX",
     blurb:
       "Working at Phosphene, I completed a number of invisible VFX shots for Babygirl. Reflection paint outs, beauty work, set augmentation, grip equipment removal, etc.",
+    skills: ["roto", "paintout", "beauty"],
   },
   {
     name: "Daredevil Born Again",
@@ -54,7 +55,7 @@ const projectsData = [
   },
   {
     name: "Reminants of Nova",
-    client: "-",
+    client: "",
     year: "10/12/2024",
     image_url: "Reminants.jpg",
     link: "",
@@ -73,7 +74,7 @@ const projectsData = [
   },
   {
     name: "A Seat at the Table",
-    client: "-",
+    client: "",
     year: "1/1/2024",
     image_url: "",
     link: "",
@@ -155,28 +156,6 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({
 
   const handleProjectClick = (proj: any) => {
     if (onSelectProject) {
-      // Determine skills based on project type or content
-      const skills = [];
-
-      // Add general skills based on category
-      if (proj.category === "VFX") {
-        skills.push("vfx");
-      } else if (proj.category === "MoGraph") {
-        skills.push("motion");
-      }
-
-      // Add specific skills mentioned in the blurb
-      if (proj.blurb.toLowerCase().includes("roto")) skills.push("roto");
-      if (proj.blurb.toLowerCase().includes("paint")) skills.push("paintout");
-      if (proj.blurb.toLowerCase().includes("beauty")) skills.push("beauty");
-      if (proj.blurb.toLowerCase().includes("comp")) skills.push("compositing");
-      if (proj.blurb.toLowerCase().includes("track")) skills.push("tracking");
-      if (
-        proj.blurb.toLowerCase().includes("3d") ||
-        proj.blurb.toLowerCase().includes("cg")
-      )
-        skills.push("3d");
-
       // Convert the project data to match the Project interface
       const formattedProject: Project = {
         id: projectsData.findIndex((p) => p.name === proj.name) + 1,
@@ -190,14 +169,18 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({
               ? `/vite-react-test/images/${proj.image_url}`
               : "/vite-react-test/images/placeholder.jpg",
           },
+          {
+            type: "video",
+            url: "/vite-react-test/videos/2024_General_v7.webm",
+          },
         ],
-        year: proj.year,
+        year: proj.year.slice(-4),
         role: "VFX Artist",
         client: proj.client,
         studio: proj.category === "VFX" ? "Phosphene FX" : "",
         director: proj.category === "VFX" ? "Halina Reijn" : "",
         category: proj.category as "VFX" | "MoGraph" | undefined,
-        skills: skills.length > 0 ? skills : undefined,
+        skills: proj.skills,
       };
 
       onSelectProject(formattedProject);
@@ -264,7 +247,9 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({
           >
             {proj.name}
             {proj.client ? ` (${proj.client})` : ""}
-            <sup className="align-super text-sm ml-1">{proj.year}</sup>
+            <sup className="align-super text-sm ml-1">
+              {proj.year.slice(-4)}
+            </sup>
           </motion.div>
         ))}
       </div>
