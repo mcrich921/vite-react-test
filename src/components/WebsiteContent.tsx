@@ -44,7 +44,7 @@ const WebsiteContent: React.FC<WebsiteContentProps> = ({ isVisible }) => {
         variants={containerVariants}
         initial="hidden"
         animate={isVisible ? "visible" : "hidden"}
-        className="w-[80%] max-w-6xl mx-auto px-4 sm:px-6 py-12"
+        className="w-[80%] max-w-6xl mx-auto pt-2 px-4 sm:px-6 py-12"
       >
         {/* Main Video Reel */}
         <motion.section variants={itemVariants} id="reel" className="mb-20">

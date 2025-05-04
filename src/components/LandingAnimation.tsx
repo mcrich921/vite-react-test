@@ -67,7 +67,7 @@ const LandingAnimation: React.FC<LandingAnimationProps> = ({
           <motion.div
             key="header-name"
             className="w-full text-center mt-10"
-            initial={{ y: "50vh", fontSize: "8rem" }}
+            initial={{ y: "50vh" }}
             animate={{
               y: 0,
               transition: {
@@ -77,9 +77,7 @@ const LandingAnimation: React.FC<LandingAnimationProps> = ({
             }}
             onAnimationComplete={() => setIsTransitionComplete(true)}
           >
-            <h1 className="text-6xl sm:text-7xl md:text-8xl font-normal tracking-tighter">
-              {name}
-            </h1>
+            <h1 className="text-[4em] font-normal">{name}</h1>
 
             <motion.p
               initial={{ opacity: 0 }}
@@ -87,7 +85,7 @@ const LandingAnimation: React.FC<LandingAnimationProps> = ({
                 opacity: 1,
                 transition: { delay: 0.3, duration: 0.5 },
               }}
-              className="text-xl font-bold"
+              className="text-lg font-bold"
             >
               vfx/graphics
             </motion.p>
@@ -98,11 +96,11 @@ const LandingAnimation: React.FC<LandingAnimationProps> = ({
                 opacity: 1,
                 transition: { delay: 0.5, duration: 0.5 },
               }}
-              className="flex justify-center space-x-6 mt-6"
+              className="flex justify-center space-x-6 mt-10"
             >
               <a
                 href="mailto:contact@example.com"
-                className="hover:opacity-70 transition-opacity text-sm"
+                className="hover:opacity-70 transition-opacity text-lg"
               >
                 email
               </a>
@@ -110,7 +108,7 @@ const LandingAnimation: React.FC<LandingAnimationProps> = ({
                 href="https://linkedin.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:opacity-70 transition-opacity text-sm"
+                className="hover:opacity-70 transition-opacity text-lg"
               >
                 linkedin
               </a>
@@ -118,7 +116,7 @@ const LandingAnimation: React.FC<LandingAnimationProps> = ({
                 href="https://imdb.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:opacity-70 transition-opacity text-sm"
+                className="hover:opacity-70 transition-opacity text-lg"
               >
                 imdb
               </a>
@@ -126,7 +124,7 @@ const LandingAnimation: React.FC<LandingAnimationProps> = ({
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:opacity-70 transition-opacity text-sm"
+                className="hover:opacity-70 transition-opacity text-lg"
               >
                 ig
               </a>
