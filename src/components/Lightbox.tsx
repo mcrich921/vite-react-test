@@ -37,11 +37,11 @@ const Lightbox: React.FC<LightboxProps> = ({ project, onClose }) => {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 20, opacity: 0 }}
-        className="bg-white border-3 border-black w-full max-w-6xl max-h-[90vh] overflow-y-auto relative"
+        className="bg-white border-3 border-black w-full max-w-6xl max-h-[90vh] overflow-hidden relative flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Navigation header */}
-        <div className="bg-black text-white flex items-center justify-between px-8 py-4">
+        {/* Navigation header - fixed at top */}
+        <div className="bg-black text-white flex items-center justify-between px-8 py-4 sticky top-0 z-10">
           <div className="flex items-center">
             <button className="flex items-center text-white">
               <span className="mr-2">←</span>
@@ -53,14 +53,15 @@ const Lightbox: React.FC<LightboxProps> = ({ project, onClose }) => {
           </div>
           <button
             onClick={onClose}
-            className="text-white text-lg font-light hover:opacity-70 transition-opacity"
+            className="text-white text-lg font-light hover:opacity-70 p-0.5 transition-opacity"
           >
             esc
           </button>
         </div>
 
+        {/* Scrollable content area */}
         <div
-          className="p-8 md:p-12"
+          className="p-8 md:p-12 overflow-y-auto"
           style={{
             backgroundImage:
               "radial-gradient(circle, rgba(209, 209, 209, 0.5) 10%, transparent 0%)",

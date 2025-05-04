@@ -171,7 +171,7 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({
           },
           {
             type: "video",
-            url: "/vite-react-test/videos/2024_General_v7.webm",
+            url: "/vite-react-test/videos/BabyGirl_Reel.webm",
           },
         ],
         year: proj.year.slice(-4),
@@ -199,15 +199,9 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({
     <motion.section variants={variants} id="projects" className="mb-20">
       <div className="flex justify-around items-center mb-8">
         <h2 className="text-6xl font-normal">projects</h2>
-        {/* <a
-          href="/cv"
-          className="text-xl italic underline hover:opacity-70 transition-opacity"
-        >
-          View CV
-        </a> */}
       </div>
       {/* Category filters */}
-      <div className="flex gap-8 mb-8 justify-center">
+      <div className="flex gap-8 justify-center">
         <div className="flex items-center gap-2">
           <input
             type="checkbox"
@@ -233,25 +227,28 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({
           </label>
         </div>
       </div>
-      {/* Projects list as text entries */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-4">
-        {filteredProjects.map((proj, idx) => (
-          <motion.div
-            key={idx}
-            variants={itemVariants}
-            whileHover={{ opacity: 0.7 }}
-            className="cursor-pointer text-xl font-normal"
-            onClick={() => {
-              handleProjectClick(proj);
-            }}
-          >
-            {proj.name}
-            {proj.client ? ` (${proj.client})` : ""}
-            <sup className="align-super text-sm ml-1">
-              {proj.year.slice(-4)}
-            </sup>
-          </motion.div>
-        ))}
+
+      {/* Projects list - text layout matching mockup */}
+      <div className="text-center relative px-4 py-8 max-w-6xl mx-auto">
+        <div className="flex flex-wrap justify-center">
+          {filteredProjects.map((proj, idx) => (
+            <motion.div
+              key={idx}
+              variants={itemVariants}
+              whileHover={{ opacity: 0.7 }}
+              className="cursor-pointer inline-block mx-6 text-xl font-normal my-4"
+              onClick={() => {
+                handleProjectClick(proj);
+              }}
+            >
+              {proj.name}
+              {proj.client ? ` (${proj.client})` : ""}
+              <sup className="align-super text-sm ml-1">
+                {proj.year.slice(-4)}
+              </sup>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </motion.section>
   );
