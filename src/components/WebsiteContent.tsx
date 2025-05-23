@@ -2,7 +2,9 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Lightbox from "./Lightbox";
 import Navbar from "./Navbar";
-import ProjectsSection, { Project } from "./ProjectsSection";
+import ProjectsSection from "./ProjectsSection";
+import { ProjectTable } from "./ProjectTable";
+import { Project } from "../utils/projectParse";
 
 interface WebsiteContentProps {
   isVisible: boolean;
@@ -44,11 +46,15 @@ const WebsiteContent: React.FC<WebsiteContentProps> = ({ isVisible }) => {
         variants={containerVariants}
         initial="hidden"
         animate={isVisible ? "visible" : "hidden"}
-        className="w-[80%] max-w-6xl mx-auto pt-2 px-4 sm:px-6 py-12"
+        className="w-[100%] mx-auto pt-2 px-4 sm:px-6 py-12"
       >
         {/* Main Video Reel */}
-        <motion.section variants={itemVariants} id="reel" className="mb-20">
-          <div className="relative aspect-video w-full bg-gray-900 border-3 overflow-hidden">
+        <motion.section
+          variants={itemVariants}
+          id="reel"
+          className="mb-20 w-[80%] mx-auto"
+        >
+          <div className="relative aspect-video w-full bg-gray-900 border-3 overflow-hidden mx-auto">
             <video
               className="w-full h-full object-cover"
               controls
@@ -119,6 +125,8 @@ const WebsiteContent: React.FC<WebsiteContentProps> = ({ isVisible }) => {
             </p>
           </div>
         </motion.section>
+
+        <ProjectTable />
 
         {/* Lightbox */}
         {selectedProject && (

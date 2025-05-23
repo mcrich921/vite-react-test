@@ -1,138 +1,6 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
-
-interface Media {
-  type: "image" | "video";
-  url: string;
-}
-
-export interface Project {
-  id: number;
-  title: string;
-  description: string;
-  thumbnail: string;
-  media: Media[];
-  year: string;
-  role: string;
-  client: string;
-  studio: string;
-  director: string;
-  category?: "VFX" | "MoGraph";
-  skills?: string[];
-}
-
-const projectsData = [
-  {
-    name: "Babygirl",
-    client: "A24",
-    year: "12/25/2024",
-    image_url: "BabyGirl_DIGI_Teaser_Fin7.jpg",
-    link: "https://a24films.com/films/babygirl",
-    category: "VFX",
-    blurb:
-      "Working at Phosphene, I completed a number of invisible VFX shots for Babygirl. Reflection paint outs, beauty work, set augmentation, grip equipment removal, etc.",
-    skills: ["roto", "paintout", "beauty"],
-  },
-  {
-    name: "Daredevil Born Again",
-    client: "Marvel",
-    year: "3/4/2025",
-    image_url: "Daredevil.jpg",
-    link: "",
-    category: "VFX",
-    blurb:
-      "Working at Phosphene, I worked on and shadowed a number of small composting tasks for the project. Screen replacements, paintout, CG comps, and invisible VFX.",
-  },
-  {
-    name: "Diarra From Detroit",
-    client: "BET+",
-    year: "3/21/2024",
-    image_url: "DiarraFromDetroit_Poster.jpg",
-    link: "",
-    category: "VFX",
-    blurb:
-      "Working at Atlantic Pictures, I completed miscelanous VFX tasks screen comps, enviornment augmentation, and UI elements.",
-  },
-  {
-    name: "Reminants of Nova",
-    client: "",
-    year: "10/12/2024",
-    image_url: "Reminants.jpg",
-    link: "",
-    category: "VFX",
-    blurb:
-      "Using NASA footage of the sun's surface as plates, I composited them in a way to match the established cinematic launguage of the film, and to make it appear as though it was shot on the same camera and lenses. Also created a few shots of a nebula though a telescope, all in comp in Nuke.",
-  },
-  {
-    name: "The Mix",
-    client: "Mad Max FX",
-    year: "1/1/2025",
-    image_url: "TheMix.jpg",
-    link: "",
-    category: "VFX",
-    blurb: "Tracked and comped a logo onto a jar for a few shots.",
-  },
-  {
-    name: "A Seat at the Table",
-    client: "",
-    year: "1/1/2024",
-    image_url: "",
-    link: "",
-    category: "VFX",
-    blurb:
-      "Mostly set augmenation (wallpaper seam removal) and other small paintout work.",
-  },
-  {
-    name: "Anamorphia II",
-    client: "MAKE ART NOW",
-    year: "6/12/2021",
-    image_url: "",
-    link: "",
-    category: "VFX",
-    blurb:
-      "Completed 70+ VFX shots in the span of two weeks, and managed a team of 15 remote VFX artists, establishing a simple pipeline to keep things organized. Created custom UI elements for O.T.I.S.",
-  },
-  {
-    name: "Bankrupt Opener",
-    client: "Bright Sun Films",
-    year: "8/10/2022",
-    image_url: "",
-    link: "",
-    category: "MoGraph",
-    blurb:
-      "Created in After Effects, this opening title sequence aimed at increasing the production quality of Jake William's Bankrupt series. It used the audio and soundtrack that accompianed the previous piece as a starting point, and has eight distinct segments.",
-  },
-  {
-    name: "Under the Lights",
-    client: "Miles Levin",
-    year: "",
-    image_url: "",
-    link: "",
-    category: "VFX",
-    blurb:
-      "Created a CG brain shot using geometry generated in Houdini, rendered in Blender, and comped in Nuke.",
-  },
-  {
-    name: "Bridgewater 30th",
-    client: "Bridgewater Advisors",
-    year: "7/13/2023",
-    image_url: "",
-    link: "",
-    category: "MoGraph",
-    blurb:
-      "Animated Bridgewater Advisors' logo into a 30th anniversay medalion to be used in a colection of client facing videos.",
-  },
-  {
-    name: "Backlot Animations",
-    client: "Atlantic Pictures",
-    year: "7/13/2024",
-    image_url: "",
-    link: "",
-    category: "MoGraph",
-    blurb:
-      "Determined a motion graphic style for Backlot, a compnay focused on connecting real estate developers with film sets.",
-  },
-];
+import { useState, useEffect } from "react";
+import { Project, parseProjects } from "../utils/projectParse";
 
 interface ProjectsSectionProps {
   variants: any;
@@ -147,6 +15,21 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({
 }) => {
   // track selected categories
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    parseProjects()
+      .then((data) => {
+        setProjects(data);
+      })
+      .catch((err) => {
+        console.error("Error parsing projects:", err);
+        setError(err.message);
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   const toggleCategory = (cate: string) => {
     setSelectedCategories((prev) =>
@@ -154,46 +37,22 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({
     );
   };
 
-  const handleProjectClick = (proj: any) => {
+  const handleProjectClick = (project: Project) => {
     if (onSelectProject) {
-      // Convert the project data to match the Project interface
-      const formattedProject: Project = {
-        id: projectsData.findIndex((p) => p.name === proj.name) + 1,
-        title: proj.name,
-        description: proj.blurb,
-        thumbnail: proj.image_url || "",
-        media: [
-          {
-            type: "image",
-            url: proj.image_url
-              ? `/vite-react-test/images/${proj.image_url}`
-              : "/vite-react-test/images/placeholder.jpg",
-          },
-          {
-            type: "video",
-            url: "/vite-react-test/videos/BabyGirl_Reel.webm",
-          },
-        ],
-        year: proj.year.slice(-4),
-        role: "VFX Artist",
-        client: proj.client,
-        studio: proj.category === "VFX" ? "Phosphene FX" : "",
-        director: proj.category === "VFX" ? "Halina Reijn" : "",
-        category: proj.category as "VFX" | "MoGraph" | undefined,
-        skills: proj.skills,
-      };
-
-      onSelectProject(formattedProject);
+      onSelectProject(project);
     }
   };
 
   // filter list based on selected categories
   const filteredProjects =
     selectedCategories.length > 0
-      ? projectsData.filter(
+      ? projects.filter(
           (p) => p.category && selectedCategories.includes(p.category)
         )
-      : projectsData;
+      : projects;
+
+  if (loading) return <div>Loading projects...</div>;
+  if (error) return <div>Error loading projects: {error}</div>;
 
   return (
     <motion.section variants={variants} id="projects" className="mb-20">
@@ -208,9 +67,9 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({
             id="vfx-filter"
             checked={selectedCategories.includes("VFX")}
             onChange={() => toggleCategory("VFX")}
-            className="w-5 h-5"
+            className="w-4 h-4"
           />
-          <label htmlFor="vfx-filter" className="text-xl">
+          <label htmlFor="vfx-filter" className="text-md font-bold">
             VFX
           </label>
         </div>
@@ -220,31 +79,34 @@ const ProjectsSection: React.FC<ProjectsSectionProps> = ({
             id="mograph-filter"
             checked={selectedCategories.includes("MoGraph")}
             onChange={() => toggleCategory("MoGraph")}
-            className="w-5 h-5"
+            className="w-4 h-4"
           />
-          <label htmlFor="mograph-filter" className="text-xl">
+          <label htmlFor="mograph-filter" className="text-md font-bold">
             MoGraph
           </label>
         </div>
       </div>
 
       {/* Projects list - text layout matching mockup */}
-      <div className="text-center relative px-4 py-8 max-w-6xl mx-auto">
+      <div className="text-center relative px-0 py-8 max-w-6xl mx-auto">
         <div className="flex flex-wrap justify-center">
-          {filteredProjects.map((proj, idx) => (
+          {filteredProjects.map((project, idx) => (
             <motion.div
               key={idx}
               variants={itemVariants}
               whileHover={{ opacity: 0.7 }}
               className="cursor-pointer inline-block mx-6 text-xl font-normal my-4"
-              onClick={() => {
-                handleProjectClick(proj);
-              }}
+              onClick={() => handleProjectClick(project)}
             >
-              {proj.name}
-              {proj.client ? ` (${proj.client})` : ""}
+              {project.name}
+              {project.credits.find((credit) => credit.credit === "Client")
+                ? ` (${
+                    project.credits.find((credit) => credit.credit === "Client")
+                      ?.person
+                  })`
+                : ""}
               <sup className="align-super text-sm ml-1">
-                {proj.year.slice(-4)}
+                {project.year.slice(-4)}
               </sup>
             </motion.div>
           ))}

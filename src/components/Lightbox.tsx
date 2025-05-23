@@ -1,21 +1,10 @@
+import React from "react";
 import { motion } from "framer-motion";
+import { Project } from "../utils/projectParse";
 
 interface Media {
   type: "image" | "video";
   url: string;
-}
-
-interface Project {
-  id: number;
-  title: string;
-  description: string;
-  media: Media[];
-  client?: string;
-  studio?: string;
-  director?: string;
-  year: string;
-  role: string;
-  skills?: string[];
 }
 
 interface LightboxProps {
@@ -24,6 +13,23 @@ interface LightboxProps {
 }
 
 const Lightbox: React.FC<LightboxProps> = ({ project, onClose }) => {
+  // Convert project.mediaPath to media array for display
+  const media: Media[] = [];
+
+  if (project.mediaPath) {
+    // Add image from mediaPath
+    media.push({
+      type: "image",
+      url: `/vite-react-test/images/${project.mediaPath}`,
+    });
+
+    // Add a sample video for demo purposes
+    media.push({
+      type: "video",
+      url: "/vite-react-test/videos/BabyGirl_Reel.webm",
+    });
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -46,7 +52,7 @@ const Lightbox: React.FC<LightboxProps> = ({ project, onClose }) => {
             <button className="flex items-center text-white">
               <span className="mr-2">←</span>
               <span className="text-lg font-light italic">
-                {project.title.toLowerCase()}
+                {project.name.toLowerCase()}
               </span>
             </button>
             <span className="mx-3">→</span>
@@ -72,21 +78,27 @@ const Lightbox: React.FC<LightboxProps> = ({ project, onClose }) => {
             {/* Left Column - Media */}
             <div>
               <div className="aspect-[2/3] mb-4">
-                {project.media[0].type === "video" ? (
-                  <video
-                    className="w-full h-full object-cover"
-                    controls
-                    autoPlay
-                  >
-                    <source src={project.media[0].url} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
+                {media.length > 0 ? (
+                  media[0].type === "video" ? (
+                    <video
+                      className="w-full h-full object-cover"
+                      controls
+                      autoPlay
+                    >
+                      <source src={media[0].url} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                  ) : (
+                    <img
+                      src={media[0].url}
+                      alt={project.name}
+                      className="w-full h-full object-cover"
+                    />
+                  )
                 ) : (
-                  <img
-                    src={project.media[0].url}
-                    alt={project.title}
-                    className="w-full h-full object-cover"
-                  />
+                  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                    No media available
+                  </div>
                 )}
               </div>
             </div>
@@ -94,7 +106,7 @@ const Lightbox: React.FC<LightboxProps> = ({ project, onClose }) => {
             {/* Right Column - Info */}
             <div className="flex flex-col items-start text-left w-full">
               <h2 className="text-6xl font-normal mb-1 leading-none">
-                {project.title}
+                {project.name}
               </h2>
               <p className="text-2xl mb-6 mt-0 leading-tight">{project.year}</p>
 
@@ -103,54 +115,71 @@ const Lightbox: React.FC<LightboxProps> = ({ project, onClose }) => {
                 <div className="absolute left-0 top-0 h-5 w-5 border-l-2 border-t-2 border-black -ml-2 -mt-1"></div>
                 <div className="absolute left-0 bottom-0 h-5 w-5 border-l-2 border-b-2 border-black -ml-2 -mb-1"></div>
                 <div className="grid grid-cols-2 gap-x-4 mb-2 text-lg">
-                  <div className="font-bold">Client</div>
-                  <div>{project.client || "—"}</div>
-                  <div className="font-bold">Studio</div>
-                  <div>{project.studio || "—"}</div>
-                  <div className="font-bold">Director</div>
-                  <div>{project.director || "—"}</div>
+                  {project.credits.map((credit, index) => (
+                    <React.Fragment key={index}>
+                      <div className="font-bold">{credit.credit}</div>
+                      <div>
+                        {credit.person ? (
+                          credit.person.includes("[") ? (
+                            <a
+                              href={credit.person
+                                .split("[")[1]
+                                .replace("]", "")}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="hover:underline"
+                            >
+                              {credit.person.split("[")[0]}
+                            </a>
+                          ) : (
+                            credit.person
+                          )
+                        ) : (
+                          "—"
+                        )}
+                      </div>
+                    </React.Fragment>
+                  ))}
                 </div>
               </div>
 
               {/* Skills/tags */}
               <div className="flex flex-wrap gap-2 mb-4">
-                {project.skills ? (
-                  project.skills.map((skill, index) => (
+                {project.tags && project.tags.length > 0 ? (
+                  project.tags.map((tag, index) => (
                     <div
                       key={index}
                       className="border border-black bg-white px-4 py-1"
                     >
-                      {skill}
+                      {tag}
                     </div>
                   ))
                 ) : (
                   <div className="border border-black px-4 py-1">
-                    {project.role}
+                    {project.category}
                   </div>
                 )}
               </div>
 
               {/* Description */}
-              <p className="text-lg leading-relaxed mb-0">
-                {project.description}
-              </p>
+              <p className="text-lg leading-relaxed mb-0">{project.blurb}</p>
             </div>
           </div>
 
           {/* Additional media section, full width, 2 columns */}
-          {project.media.length > 1 && (
+          {media.length > 1 && (
             <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
-              {project.media.map((media, index) => (
+              {media.slice(1).map((mediaItem, index) => (
                 <div key={index} className="aspect-video w-full">
-                  {media.type === "video" ? (
+                  {mediaItem.type === "video" ? (
                     <video className="w-full h-full object-cover" controls>
-                      <source src={media.url} type="video/mp4" />
+                      <source src={mediaItem.url} type="video/mp4" />
                       Your browser does not support the video tag.
                     </video>
                   ) : (
                     <img
-                      src={media.url}
-                      alt={`${project.title} - ${index + 2}`}
+                      src={mediaItem.url}
+                      alt={`${project.name} - ${index + 2}`}
                       className="w-full h-full object-cover"
                     />
                   )}
