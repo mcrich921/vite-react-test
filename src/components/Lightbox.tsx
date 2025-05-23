@@ -112,13 +112,16 @@ const Lightbox: React.FC<LightboxProps> = ({ project, onClose }) => {
 
               {/* Project metadata in a bracket-like design */}
               <div className="pl-5 mb-6 relative">
-                <div className="absolute left-0 top-0 h-5 w-5 border-l-2 border-t-2 border-black -ml-2 -mt-1"></div>
-                <div className="absolute left-0 bottom-0 h-5 w-5 border-l-2 border-b-2 border-black -ml-2 -mb-1"></div>
-                <div className="grid grid-cols-2 gap-x-4 mb-2 text-lg">
+                <div className="absolute left-0 top-0 h-5 w-5 border-l-2 border-t-2 border-gray-500 -mt-1"></div>
+                <div className="absolute left-0 bottom-0 h-5 w-5 border-l-2 border-b-2 border-gray-500 -mb-1"></div>
+                <div className="absolute -right-10 top-0 h-5 w-5 border-r-2 border-t-2 border-gray-500 -mt-1"></div>
+                <div className="absolute -right-10 bottom-0 h-5 w-5 border-r-2 border-b-2 border-gray-500 -mb-1"></div>
+                <div className="flex flex-col text-lg">
                   {project.credits.map((credit, index) => (
-                    <React.Fragment key={index}>
-                      <div className="font-bold">{credit.credit}</div>
-                      <div>
+                    <div key={index} className="flex items-center">
+                      <div className="font-bold pr-2">{credit.credit}</div>
+                      <div className="flex-grow border-t-3 border-dotted border-black translate-y-1 px-4"></div>
+                      <div className="pl-2">
                         {credit.person ? (
                           credit.person.includes("[") ? (
                             <a
@@ -138,7 +141,7 @@ const Lightbox: React.FC<LightboxProps> = ({ project, onClose }) => {
                           "—"
                         )}
                       </div>
-                    </React.Fragment>
+                    </div>
                   ))}
                 </div>
               </div>
